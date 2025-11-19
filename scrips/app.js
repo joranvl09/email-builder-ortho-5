@@ -1,3 +1,4 @@
+
 class EmailBuilder {
     constructor() {
         this.blocks = [];
@@ -5,26 +6,16 @@ class EmailBuilder {
         this.currentEmail = [];
         this.editingBlockIndex = null;
         
-        this.initializeApp();
+        // FORCEER DEFAULT DATA
+        this.initializeDefaultData();
         this.bindEvents();
         this.loadData();
     }
 
-    initializeApp() {
-        console.log("App initializing...");
-        // Forceer default data als er geen data is
-        if (!localStorage.getItem('emailBlocks') || JSON.parse(localStorage.getItem('emailBlocks')).length === 0) {
-            console.log("No data found, creating default data...");
-            this.initializeDefaultData();
-        } else {
-            console.log("Existing data found");
-        }
-    }
-
     initializeDefaultData() {
-        console.log("Creating default data...");
+        console.log("📦 Creating default data...");
         
-        // 10 Veelgebruikte zinnen
+        // 10 VEELGEBRUIKTE ZINNEN
         const defaultBlocks = [
             { id: 1, text: "Beste [Naam],", category: "aanhef" },
             { id: 2, text: "Met vriendelijke groet,", category: "afsluiting" },
@@ -38,7 +29,7 @@ class EmailBuilder {
             { id: 10, text: "Hoogachtend,", category: "afsluiting" }
         ];
 
-        // 7 Templates met random tekst
+        // 7 VOORBEELD TEMPLATES
         const defaultTemplates = [
             { 
                 id: 1, 
@@ -122,32 +113,28 @@ class EmailBuilder {
             }
         ];
 
+        // FORCEER OPSLAAN
         localStorage.setItem('emailBlocks', JSON.stringify(defaultBlocks));
         localStorage.setItem('emailTemplates', JSON.stringify(defaultTemplates));
-        console.log("Default data created:", defaultBlocks.length, "blocks,", defaultTemplates.length, "templates");
+        
+        console.log("✅ Default data created!");
+        console.log("📝 Blocks:", defaultBlocks.length);
+        console.log("🎨 Templates:", defaultTemplates.length);
     }
 
     loadData() {
-        try {
-            this.blocks = JSON.parse(localStorage.getItem('emailBlocks') || '[]');
-            this.templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
-            
-            console.log("Loaded data:", {
-                blocks: this.blocks,
-                templates: this.templates
-            });
-            
-            this.renderBlocks();
-            this.renderTemplates();
-            this.renderEmail();
-        } catch (error) {
-            console.error("Error loading data:", error);
-            // Reset en probeer opnieuw
-            localStorage.removeItem('emailBlocks');
-            localStorage.removeItem('emailTemplates');
-            this.initializeDefaultData();
-            this.loadData();
-        }
+        console.log("🔄 Loading data from localStorage...");
+        
+        // Laad data
+        this.blocks = JSON.parse(localStorage.getItem('emailBlocks') || '[]');
+        this.templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
+        
+        console.log("📥 Loaded:", this.blocks.length, "blocks,", this.templates.length, "templates");
+        
+        // Toon data
+        this.renderBlocks();
+        this.renderTemplates();
+        this.renderEmail();
     }
 
     saveData() {
@@ -200,12 +187,7 @@ class EmailBuilder {
         const blocksList = document.getElementById('blocksList');
         blocksList.innerHTML = '';
 
-        console.log("Rendering blocks:", this.blocks);
-
-        if (this.blocks.length === 0) {
-            blocksList.innerHTML = '<p style="color: #666; font-style: italic;">Geen zinnen gevonden. Voeg er een toe!</p>';
-            return;
-        }
+        console.log("🎯 Rendering blocks:", this.blocks);
 
         this.blocks.forEach(block => {
             const blockElement = document.createElement('div');
@@ -245,15 +227,7 @@ class EmailBuilder {
         const templateSelector = document.getElementById('templateSelector');
         templateSelector.innerHTML = '<option value="">Kies een template...</option>';
 
-        console.log("Rendering templates:", this.templates);
-
-        if (this.templates.length === 0) {
-            const option = document.createElement('option');
-            option.textContent = 'Geen templates beschikbaar';
-            option.disabled = true;
-            templateSelector.appendChild(option);
-            return;
-        }
+        console.log("🎯 Rendering templates:", this.templates);
 
         this.templates.forEach(template => {
             const option = document.createElement('option');
@@ -449,8 +423,8 @@ class EmailBuilder {
     }
 }
 
-// Initialize the app when DOM is loaded
+// Start de app
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM loaded, starting app...");
+    console.log("🚀 Starting Email Builder...");
     new EmailBuilder();
 });
