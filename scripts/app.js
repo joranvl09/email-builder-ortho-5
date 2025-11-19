@@ -4,7 +4,6 @@ class EmailBuilder {
         this.templates = [];
         this.currentEmail = [];
         this.editingBlockIndex = null;
-        this.draggedBlockIndex = null;
         
         this.initializeDefaultData();
         this.bindEvents();
@@ -42,16 +41,6 @@ class EmailBuilder {
                 id: 6, 
                 text: "Annulering:\nMocht u verhinderd zijn, gelieve dit 24 uur van tevoren door te geven.", 
                 category: "annulering" 
-            },
-            { 
-                id: 7, 
-                text: "Feedback vraag:\nHoe ervaart u uw herstel tot nu toe?", 
-                category: "feedback" 
-            },
-            { 
-                id: 8, 
-                text: "Nazorg:\nHet is belangrijk om nazorgafspraken of controles bij te wonen.", 
-                category: "nazorg" 
             }
         ];
 
@@ -115,57 +104,132 @@ class EmailBuilder {
     setupDragAndDrop() {
         const emailCanvas = document.getElementById('emailCanvas');
         
-        // Drop zone voor nieuwe blokken
+        // Voor nieuwe blokken van sidebar
         emailCanvas.addEventListener('dragover', (e) => {
             e.preventDefault();
-            emailCanvas.classList.add('drag-over');
+            this.handleDragOver(e);
         });
 
         emailCanvas.addEventListener('dragleave', () => {
-            emailCanvas.classList.remove('drag-over');
+            this.handleDragLeave();
         });
 
         emailCanvas.addEventListener('drop', (e) => {
             e.preventDefault();
-            emailCanvas.classList.remove('drag-over');
-            
-            const blockId = e.dataTransfer.getData('text/plain');
-            if (blockId.startsWith('block-')) {
-                // Bestaand blok verslepen
-                const fromIndex = parseInt(blockId.split('-')[1]);
-                const toIndex = this.getDropIndex(e);
-                this.moveBlock(fromIndex, toIndex);
-            } else {
-                // Nieuw blok toevoegen
-                this.addBlockToEmail(parseInt(blockId));
-            }
+            this.handleDrop(e);
         });
     }
 
-    getDropIndex(e) {
+    handleDragOver(e) {
         const emailCanvas = document.getElementById('emailCanvas');
+        emailCanvas.classList.add('drag-over');
+        
+        // Toon drop indicator tussen blokken
         const blocks = emailCanvas.querySelectorAll('.email-block');
         const canvasRect = emailCanvas.getBoundingClientRect();
         const y = e.clientY - canvasRect.top;
-
+        
+        // Verwijder alle bestaande indicators
+        document.querySelectorAll('.drop-indicator').forEach(indicator => indicator.remove());
+        
+        let insertIndex = blocks.length;
+        
         for (let i = 0; i < blocks.length; i++) {
-            const blockRect = blocks[i].getBoundingClientRect();
+            const block = blocks[i];
+            const blockRect = block.getBoundingClientRect();
             const blockTop = blockRect.top - canvasRect.top;
             const blockMiddle = blockTop + (blockRect.height / 2);
-
+            
             if (y < blockMiddle) {
-                return i;
+                insertIndex = i;
+                // Voeg drop indicator toe boven dit blok
+                this.showDropIndicator(block, 'before');
+                break;
+            } else if (i === blocks.length - 1) {
+                insertIndex = blocks.length;
+                // Voeg drop indicator toe onder laatste blok
+                this.showDropIndicator(block, 'after');
             }
         }
-        return blocks.length;
+        
+        e.dataTransfer.dropEffect = 'move';
+    }
+
+    showDropIndicator(block, position) {
+        const indicator = document.createElement('div');
+        indicator.className = 'drop-indicator';
+        indicator.style.height = '4px';
+        indicator.style.background = '#3498db';
+        indicator.style.margin = position === 'before' ? '0 0 10px 0' : '10px 0 0 0';
+        indicator.style.borderRadius = '2px';
+        
+        if (position === 'before') {
+            block.parentNode.insertBefore(indicator, block);
+        } else {
+            block.parentNode.insertBefore(indicator, block.nextSibling);
+        }
+    }
+
+    handleDragLeave() {
+        const emailCanvas = document.getElementById('emailCanvas');
+        emailCanvas.classList.remove('drag-over');
+        document.querySelectorAll('.drop-indicator').forEach(indicator => indicator.remove());
+    }
+
+    handleDrop(e) {
+        const emailCanvas = document.getElementById('emailCanvas');
+        emailCanvas.classList.remove('drag-over');
+        document.querySelectorAll('.drop-indicator').forEach(indicator => indicator.remove());
+        
+        const blockId = e.dataTransfer.getData('text/plain');
+        
+        // Bepaal drop positie
+        const blocks = emailCanvas.querySelectorAll('.email-block');
+        const canvasRect = emailCanvas.getBoundingClientRect();
+        const y = e.clientY - canvasRect.top;
+        
+        let dropIndex = blocks.length;
+        
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
+            const blockRect = block.getBoundingClientRect();
+            const blockTop = blockRect.top - canvasRect.top;
+            const blockMiddle = blockTop + (blockRect.height / 2);
+            
+            if (y < blockMiddle) {
+                dropIndex = i;
+                break;
+            }
+        }
+        
+        if (blockId.startsWith('move-')) {
+            // Verplaats bestaand blok
+            const fromIndex = parseInt(blockId.split('-')[1]);
+            if (fromIndex !== dropIndex) {
+                this.moveBlock(fromIndex, dropIndex);
+            }
+        } else {
+            // Voeg nieuw blok toe
+            this.addBlockToEmail(parseInt(blockId), dropIndex);
+        }
     }
 
     moveBlock(fromIndex, toIndex) {
-        if (fromIndex === toIndex) return;
-        
         const block = this.currentEmail.splice(fromIndex, 1)[0];
         this.currentEmail.splice(toIndex, 0, block);
         this.renderEmail();
+    }
+
+    addBlockToEmail(blockId, index = -1) {
+        const block = this.blocks.find(b => b.id === blockId);
+        if (block) {
+            if (index === -1) {
+                this.currentEmail.push({...block});
+            } else {
+                this.currentEmail.splice(index, 0, {...block});
+            }
+            this.renderEmail();
+        }
     }
 
     renderBlocks() {
@@ -236,7 +300,7 @@ class EmailBuilder {
             blockElement.dataset.index = index;
 
             blockElement.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', `block-${index}`);
+                e.dataTransfer.setData('text/plain', `move-${index}`);
                 blockElement.classList.add('dragging');
             });
 
@@ -295,14 +359,6 @@ class EmailBuilder {
             this.blocks = this.blocks.filter(block => block.id !== blockId);
             this.saveData();
             this.renderBlocks();
-        }
-    }
-
-    addBlockToEmail(blockId) {
-        const block = this.blocks.find(b => b.id === blockId);
-        if (block) {
-            this.currentEmail.push({...block});
-            this.renderEmail();
         }
     }
 
