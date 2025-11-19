@@ -208,14 +208,27 @@ body {
     border-radius: 8px;
     padding: 1.25rem;
     position: relative;
-    cursor: pointer;
+    cursor: grab;
     transition: all 0.2s ease;
     white-space: pre-line;
+    margin-bottom: 1rem;
 }
 
 .email-block:hover {
     background: #f8f9fa;
     border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.email-block.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+.email-block.drag-over {
+    border: 2px dashed #3498db;
+    background: #ebf5fb;
 }
 
 .email-block .block-actions {
