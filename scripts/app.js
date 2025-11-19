@@ -11,101 +11,120 @@ class EmailBuilder {
     }
 
     initializeDefaultData() {
-        console.log("📦 Creating default data...");
-        
         const defaultBlocks = [
-            { id: 1, text: "Beste [Naam],", category: "aanhef" },
-            { id: 2, text: "Met vriendelijke groet,", category: "afsluiting" },
-            { id: 3, text: "Hartelijk dank voor uw bericht.", category: "dank" },
-            { id: 4, text: "We nemen zo spoedig mogelijk contact met u op.", category: "actie" },
-            { id: 5, text: "Graag ontvang ik meer informatie over:", category: "vraag" },
-            { id: 6, text: "Bij voorbaat dank voor uw medewerking.", category: "dank" },
-            { id: 7, text: "Heeft u nog vragen? Laat het ons weten.", category: "vraag" },
-            { id: 8, text: "We kijken uit naar onze samenwerking.", category: "samenwerking" },
-            { id: 9, text: "U kunt ons bereiken op telefoonnummer [nummer].", category: "contact" },
-            { id: 10, text: "Hoogachtend,", category: "afsluiting" }
+            { 
+                id: 1, 
+                text: "Aanhef:\nBeste meneer/mevrouw,\n\n", 
+                category: "aanhef" 
+            },
+            { 
+                id: 2, 
+                text: "Afsluiting:\nMet vriendelijke groet,\nHet Team Ortho Care", 
+                category: "afsluiting" 
+            },
+            { 
+                id: 3, 
+                text: "Contact:\nTelefoon: 010-1234567\nE-mail: info@orthocare.nl", 
+                category: "contact" 
+            },
+            { 
+                id: 4, 
+                text: "Bevestiging:\nHartelijk dank voor uw aanvraag. Wij hebben alle informatie goed ontvangen.", 
+                category: "dank" 
+            },
+            { 
+                id: 5, 
+                text: "Afspraak:\nWe nemen binnen twee werkdagen contact met u op voor een afspraak.", 
+                category: "afspraak" 
+            },
+            { 
+                id: 6, 
+                text: "Kosten:\nTijdens het gesprek lichten we de kosten en planning uitgebreid toe.", 
+                category: "kosten" 
+            },
+            { 
+                id: 7, 
+                text: "Vragen:\nHeeft u nog vragen vooraf? Laat het ons vooral weten.", 
+                category: "vragen" 
+            },
+            { 
+                id: 8, 
+                text: "Samenwerking:\nWe kijken uit naar onze samenwerking en hopen u snel te mogen helpen.", 
+                category: "samenwerking" 
+            },
+            { 
+                id: 9, 
+                text: "Onderwerp:\nBetreft: Offerte aanvraag orthopedische zorg", 
+                category: "onderwerp" 
+            },
+            { 
+                id: 10, 
+                text: "Verwijzing:\nNaar aanleiding van uw verwijzing van huisarts Dr. Jansen...", 
+                category: "verwijzing" 
+            }
         ];
 
         const defaultTemplates = [
             { 
                 id: 1, 
-                name: "Standaard Reactie", 
+                name: "Standaard Reactie",
                 content: [
-                    "Beste [Naam],",
-                    "Hartelijk dank voor uw bericht.",
-                    "We nemen binnen 24 uur contact met u op.",
-                    "Met vriendelijke groet,"
-                ] 
+                    "Beste meneer/mevrouw,\n\nHartelijk dank voor uw bericht. Wij hebben uw vraag ontvangen en nemen binnen 24 uur contact met u op.\n\nMet vriendelijke groet,\nHet Team Ortho Care\n\nTelefoon: 010-1234567\nE-mail: info@orthocare.nl"
+                ]
             },
             { 
                 id: 2, 
-                name: "Offerte Aanvraag", 
+                name: "Offerte Aanvraag",
                 content: [
-                    "Beste [Naam],",
-                    "Bedankt voor uw interesse in onze diensten.",
-                    "We sturen u binnen 2 werkdagen een offerte toe.",
-                    "Heeft u nog vragen? Laat het ons weten.",
-                    "Met vriendelijke groet,"
-                ] 
+                    "Beste meneer/mevrouw,\n\nBedankt voor uw interesse in onze orthopedische diensten. We hebben uw aanvraag ontvangen en gaan hier graag verder op in.",
+                    "Tijdens een persoonlijk gesprek bespreken we uw specifieke situatie, wensen en mogelijkheden. We lichten dan ook de kosten en planning uitgebreid toe.",
+                    "We nemen binnen twee werkdagen contact met u op om een afspraak in te plannen. Heeft u vooraf nog vragen? Laat het ons weten.\n\nMet vriendelijke groet,\nHet Team Ortho Care"
+                ]
             },
             { 
                 id: 3, 
-                name: "Factuur Herinnering", 
+                name: "Afspraak Bevestiging",
                 content: [
-                    "Beste [Naam],",
-                    "Hierbij een vriendelijke herinnering voor openstaande factuur [factuurnummer].",
-                    "Zou u de betaling zo spoedig mogelijk kunnen voldoen?",
-                    "Bij voorbaat dank voor uw medewerking.",
-                    "Met vriendelijke groet,"
-                ] 
+                    "Beste meneer/mevrouw,\n\nHierbij bevestigen wij uw afspraak op [datum] om [tijd] uur.\nLocatie: Ortho Care Centrum, Hoofdstraat 123, Rotterdam",
+                    "Tijdens de afspraak bespreken we uw situatie en maken we een behandelplan op maat. Graag vragen wij u eventuele medische gegevens en verwijsbrief mee te nemen.",
+                    "Mocht u verhinderd zijn, laat het ons dan minimaal 24 uur van tevoren weten zodat we de afspraak kunnen verplaatsen.\n\nWe kijken uit naar uw komst!\n\nMet vriendelijke groet,\nHet Team Ortho Care"
+                ]
             },
             { 
                 id: 4, 
-                name: "Afspraak Bevestiging", 
+                name: "Factuur Herinnering",
                 content: [
-                    "Beste [Naam],",
-                    "Hierbij bevestigen wij uw afspraak op [datum] om [tijd].",
-                    "Locatie: [adres]",
-                    "Mocht u verhinderd zijn, laat het ons tijdig weten.",
-                    "We kijken uit naar ons gesprek!",
-                    "Met vriendelijke groet,"
-                ] 
+                    "Beste meneer/mevrouw,\n\nHierbij een vriendelijke herinnering voor de openstaande factuur met nummer [factuurnummer] met een totaalbedrag van € [bedrag].",
+                    "Zou u de betaling zo spoedig mogelijk willen voldoen? Indien u de factuur reeds heeft betaald, kunt u deze herinnering als niet verzonden beschouwen.",
+                    "Voor vragen over deze factuur kunt u contact opnemen met onze administratie via telefoonnummer 010-1234567 of per e-mail: admin@orthocare.nl\n\nBij voorbaat dank voor uw medewerking."
+                ]
             },
             { 
                 id: 5, 
-                name: "Klachtenafhandeling", 
+                name: "Klachtenafhandeling",
                 content: [
-                    "Beste [Naam],",
-                    "Hartelijk dank voor het melden van uw klacht.",
-                    "Onze excuses voor het ongemak.",
-                    "We doen ons uiterste best om dit op te lossen.",
-                    "U hoort binnen 48 uur van ons.",
-                    "Met vriendelijke groet,"
-                ] 
+                    "Geachte heer/mevrouw,\n\nHartelijk dank voor het melden van uw klacht. Onze excuses voor het ongemak dat u heeft ervaren.",
+                    "We nemen uw feedback zeer serieus en doen ons uiterste best om een passende oplossing te vinden voor uw situatie.",
+                    "U hoort binnen 48 uur van onze klantenservice coördinator. Mocht u in de tussentijd vragen hebben, dan kunt u terecht bij [naam contactpersoon].\n\nMet vriendelijke groet,\nHet Management Ortho Care"
+                ]
             },
             { 
                 id: 6, 
-                name: "Samenwerking Voorstel", 
+                name: "Samenwerking Voorstel",
                 content: [
-                    "Beste [Naam],",
-                    "Bedankt voor het gesprek van [datum].",
-                    "We zijn enthousiast over de mogelijke samenwerking.",
-                    "Bijgevoegd vindt u ons voorstel.",
-                    "We kijken uit naar uw reactie.",
-                    "Met vriendelijke groet,"
-                ] 
+                    "Beste [Naam],\n\nBedankt voor het waardevolle gesprek van [datum]. We zijn enthousiast over de mogelijke samenwerking.",
+                    "Bijgevoegd vindt u ons uitgebreide voorstel met daarin onze aanpak, planning en investering. We zijn ervan overtuigd dat we u optimaal kunnen ondersteunen.",
+                    "We kijken uit naar uw reactie en hopen snel van u te horen. Voor vragen staat ons team uiteraard graag voor u klaar.\n\nMet vriendelijke groet,\n[Je Naam]\nOrtho Care Specialist"
+                ]
             },
             { 
                 id: 7, 
-                name: "Vacature Reactie", 
+                name: "Vacature Reactie",
                 content: [
-                    "Beste [Naam],",
-                    "Hartelijk dank voor uw sollicitatie.",
-                    "We hebben uw CV met interesse ontvangen.",
-                    "U hoort binnen 5 werkdagen van ons.",
-                    "Heeft u nog vragen? Laat het ons weten.",
-                    "Met vriendelijke groet,"
-                ] 
+                    "Beste meneer/mevrouw,\n\nHartelijk dank voor uw sollicitatie op de functie van Orthopedisch Medewerker. We hebben uw CV en motivatie met interesse ontvangen.",
+                    "Uw profiel sluit goed aan bij onze zoektocht. We nodigen u graag uit voor een kennismakingsgesprek in week [weeknummer].",
+                    "U hoort binnen 5 werkdagen van ons voor het inplannen van een gesprek. Heeft u vragen vooraf? Neem dan contact op met onze HR afdeling.\n\nMet vriendelijke groet,\nHet Werving & Selectie Team"
+                ]
             }
         ];
 
@@ -191,7 +210,7 @@ class EmailBuilder {
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'delete-btn';
             deleteBtn.textContent = '❌';
-            deleteBtn.title = 'Verwijder zin';
+            deleteBtn.title = 'Verwijder blok';
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.deleteBlock(block.id);
@@ -208,7 +227,7 @@ class EmailBuilder {
 
     renderTemplates() {
         const templateSelector = document.getElementById('templateSelector');
-        templateSelector.innerHTML = '<option value="">Kies een template...</option>';
+        templateSelector.innerHTML = '<option value="">Kies template...</option>';
 
         this.templates.forEach(template => {
             const option = document.createElement('option');
@@ -222,7 +241,7 @@ class EmailBuilder {
         const emailCanvas = document.getElementById('emailCanvas');
         
         if (this.currentEmail.length === 0) {
-            emailCanvas.innerHTML = '<p class="empty-state">Sleep zinnen hierheen om je e-mail te bouwen</p>';
+            emailCanvas.innerHTML = '<p class="empty-state">Sleep blokken hierheen om je e-mail te bouwen</p>';
             return;
         }
 
@@ -234,8 +253,7 @@ class EmailBuilder {
             blockElement.textContent = block.text;
 
             const editBtn = document.createElement('button');
-            editBtn.textContent = '✏️';
-            editBtn.title = 'Bewerk tekst';
+            editBtn.textContent = '✏️ Bewerk';
             editBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.editBlockText(index);
@@ -243,8 +261,7 @@ class EmailBuilder {
 
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'delete-btn';
-            deleteBtn.textContent = '❌';
-            deleteBtn.title = 'Verwijder van canvas';
+            deleteBtn.textContent = '❌ Verwijder';
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.removeBlockFromEmail(index);
@@ -264,7 +281,7 @@ class EmailBuilder {
         const newBlockText = document.getElementById('newBlockText').value.trim();
         
         if (!newBlockText) {
-            alert('Voer tekst in voor de nieuwe zin');
+            alert('Voer tekst in voor het nieuwe blok');
             return;
         }
 
@@ -282,7 +299,7 @@ class EmailBuilder {
     }
 
     deleteBlock(blockId) {
-        if (confirm('Weet je zeker dat je deze zin wilt verwijderen?')) {
+        if (confirm('Weet je zeker dat je dit blok wilt verwijderen?')) {
             this.blocks = this.blocks.filter(block => block.id !== blockId);
             this.saveData();
             this.renderBlocks();
