@@ -1,4 +1,3 @@
-
 class EmailBuilder {
     constructor() {
         this.blocks = [];
@@ -6,7 +5,6 @@ class EmailBuilder {
         this.currentEmail = [];
         this.editingBlockIndex = null;
         
-        // FORCEER DEFAULT DATA
         this.initializeDefaultData();
         this.bindEvents();
         this.loadData();
@@ -15,7 +13,6 @@ class EmailBuilder {
     initializeDefaultData() {
         console.log("📦 Creating default data...");
         
-        // 10 VEELGEBRUIKTE ZINNEN
         const defaultBlocks = [
             { id: 1, text: "Beste [Naam],", category: "aanhef" },
             { id: 2, text: "Met vriendelijke groet,", category: "afsluiting" },
@@ -29,7 +26,6 @@ class EmailBuilder {
             { id: 10, text: "Hoogachtend,", category: "afsluiting" }
         ];
 
-        // 7 VOORBEELD TEMPLATES
         const defaultTemplates = [
             { 
                 id: 1, 
@@ -113,25 +109,14 @@ class EmailBuilder {
             }
         ];
 
-        // FORCEER OPSLAAN
         localStorage.setItem('emailBlocks', JSON.stringify(defaultBlocks));
         localStorage.setItem('emailTemplates', JSON.stringify(defaultTemplates));
-        
-        console.log("✅ Default data created!");
-        console.log("📝 Blocks:", defaultBlocks.length);
-        console.log("🎨 Templates:", defaultTemplates.length);
     }
 
     loadData() {
-        console.log("🔄 Loading data from localStorage...");
-        
-        // Laad data
         this.blocks = JSON.parse(localStorage.getItem('emailBlocks') || '[]');
         this.templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
         
-        console.log("📥 Loaded:", this.blocks.length, "blocks,", this.templates.length, "templates");
-        
-        // Toon data
         this.renderBlocks();
         this.renderTemplates();
         this.renderEmail();
@@ -187,8 +172,6 @@ class EmailBuilder {
         const blocksList = document.getElementById('blocksList');
         blocksList.innerHTML = '';
 
-        console.log("🎯 Rendering blocks:", this.blocks);
-
         this.blocks.forEach(block => {
             const blockElement = document.createElement('div');
             blockElement.className = 'block-item';
@@ -226,8 +209,6 @@ class EmailBuilder {
     renderTemplates() {
         const templateSelector = document.getElementById('templateSelector');
         templateSelector.innerHTML = '<option value="">Kies een template...</option>';
-
-        console.log("🎯 Rendering templates:", this.templates);
 
         this.templates.forEach(template => {
             const option = document.createElement('option');
@@ -423,8 +404,6 @@ class EmailBuilder {
     }
 }
 
-// Start de app
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("🚀 Starting Email Builder...");
     new EmailBuilder();
 });
