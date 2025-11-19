@@ -11,54 +11,32 @@ class EmailBuilder {
     }
 
     initializeDefaultData() {
+        // 3 simpele blokken
         const defaultBlocks = [
             { 
                 id: 1, 
-                text: "Aanhef:\nBeste [Klantnaam],\n\n", 
-                category: "aanhef" 
+                text: "En dan komt er dit en dit nog bij kijken", 
+                category: "toevoeging" 
             },
             { 
                 id: 2, 
-                text: "Afsluiting:\nMet vriendelijke groet,\n\nHet team van Orto", 
-                category: "afsluiting" 
+                text: "Voor uw kind wordt dit en dit anders", 
+                category: "aanpassing" 
             },
             { 
                 id: 3, 
-                text: "Contact:\nTelefoon: [Telefoonnummer]\nE-mail: [E-mailadres]", 
-                category: "contact" 
-            },
-            { 
-                id: 4, 
-                text: "Afspraak bevestiging:\nUw afspraak is bevestigd op [Datum] om [Tijd].", 
-                category: "afspraak" 
-            },
-            { 
-                id: 5, 
-                text: "Locatie:\nOnze locatie: [Adres]\nGelieve 10 minuten eerder aanwezig te zijn.", 
-                category: "locatie" 
-            },
-            { 
-                id: 6, 
-                text: "Annulering:\nMocht u verhinderd zijn, gelieve dit 24 uur van tevoren door te geven.", 
-                category: "annulering" 
+                text: "En nu heeft u pech", 
+                category: "probleem" 
             }
         ];
 
+        // 1 template
         const defaultTemplates = [
             { 
                 id: 1, 
-                name: "Afspraak Bevestiging",
+                name: "Nazorg Template",
                 content: [
-                    "Beste [Klantnaam],\n\nWij willen u graag informeren dat uw afspraak bij Orto is bevestigd op [Datum] om [Tijd]. De afspraak vindt plaats op onze locatie aan [Adres]. Gelieve bij aankomst ongeveer 10 minuten eerder aanwezig te zijn, zodat wij u rustig kunnen inchecken en de administratie kunnen afronden.\n\nWat u kunt verwachten tijdens uw bezoek:\n\n• Een korte intake door een van onze specialisten\n• Eventuele metingen of onderzoeken die nodig zijn voor uw behandeling\n• Bespreking van uw behandelplan en eventuele vervolgafspraken\n\nIndien u speciale wensen of vragen heeft over uw behandeling, laat het ons gerust weten voor uw afspraak. U kunt ons bereiken via [Telefoonnummer] of [E-mailadres].\n\nMocht u verhinderd zijn, vragen wij u vriendelijk dit uiterlijk 24 uur voor de afspraak aan ons door te geven, zodat wij een nieuwe afspraak voor u kunnen plannen. Dit helpt ons om onze planning efficiënt te houden en andere klanten ook optimaal te kunnen bedienen.\n\nWij kijken ernaar uit u te verwelkomen en u te helpen met uw behandeling.",
-                    "Met vriendelijke groet,\n\nHet team van Orto"
-                ]
-            },
-            { 
-                id: 2, 
-                name: "Nazorg en Feedback",
-                content: [
-                    "Beste [Klantnaam],\n\nWij hopen dat uw behandeling bij Orto goed is verlopen en dat u tevreden bent met het resultaat. Ons doel is om ervoor te zorgen dat u zich volledig ondersteund voelt, niet alleen tijdens de behandeling, maar ook in de periode erna.\n\nOm u optimaal te begeleiden, willen wij graag uw feedback ontvangen over het volgende:\n\n• Hoe ervaart u uw herstel tot nu toe?\n• Heeft u nog vragen over de oefeningen, instructies of materialen die u heeft gekregen?\n• Zijn er problemen of ongemakken die wij voor u kunnen oplossen?\n\nDaarnaast willen wij u eraan herinneren dat het belangrijk is om eventuele nazorgafspraken of controles bij te wonen. Dit helpt ons om uw herstel goed te monitoren en bij te sturen waar nodig.\n\nIndien u aanvullende ondersteuning nodig heeft, kunt u contact opnemen via [Telefoonnummer] of [E-mailadres]. Wij staan altijd klaar om uw vragen te beantwoorden en u verder te helpen.\n\nWij waarderen uw vertrouwen in Orto en kijken ernaar uit om u te blijven ondersteunen bij uw herstel en welzijn.",
-                    "Met vriendelijke groet,\n\nHet team van Orto"
+                    "Beste [Klantnaam],\n\nWij hopen dat uw behandeling bij Orto goed is verlopen en dat u tevreden bent met het resultaat. Ons doel is om ervoor te zorgen dat u zich volledig ondersteund voelt, niet alleen tijdens de behandeling, maar ook in de periode erna.\n\nOm u optimaal te begeleiden, willen wij graag uw feedback ontvangen over het volgende:\n\nHoe ervaart u uw herstel tot nu toe?\n\nHeeft u nog vragen over de oefeningen, instructies of materialen die u heeft gekregen?\n\nZijn er problemen of ongemakken die wij voor u kunnen oplossen?\n\nDaarnaast willen wij u eraan herinneren dat het belangrijk is om eventuele nazorgafspraken of controles bij te wonen. Dit helpt ons om uw herstel goed te monitoren en bij te sturen waar nodig.\n\nIndien u aanvullende ondersteuning nodig heeft, kunt u contact opnemen via [Telefoonnummer] of [E-mailadres]. Wij staan altijd klaar om uw vragen te beantwoorden en u verder te helpen.\n\nWij waarderen uw vertrouwen in Orto en kijken ernaar uit om u te blijven ondersteunen bij uw herstel en welzijn.\n\nMet vriendelijke groet,\n[Naam medewerker]"
                 ]
             }
         ];
@@ -104,132 +82,22 @@ class EmailBuilder {
     setupDragAndDrop() {
         const emailCanvas = document.getElementById('emailCanvas');
         
-        // Voor nieuwe blokken van sidebar
         emailCanvas.addEventListener('dragover', (e) => {
             e.preventDefault();
-            this.handleDragOver(e);
+            emailCanvas.classList.add('drag-over');
         });
 
         emailCanvas.addEventListener('dragleave', () => {
-            this.handleDragLeave();
+            emailCanvas.classList.remove('drag-over');
         });
 
         emailCanvas.addEventListener('drop', (e) => {
             e.preventDefault();
-            this.handleDrop(e);
+            emailCanvas.classList.remove('drag-over');
+            
+            const blockId = e.dataTransfer.getData('text/plain');
+            this.addBlockToEmail(parseInt(blockId));
         });
-    }
-
-    handleDragOver(e) {
-        const emailCanvas = document.getElementById('emailCanvas');
-        emailCanvas.classList.add('drag-over');
-        
-        // Toon drop indicator tussen blokken
-        const blocks = emailCanvas.querySelectorAll('.email-block');
-        const canvasRect = emailCanvas.getBoundingClientRect();
-        const y = e.clientY - canvasRect.top;
-        
-        // Verwijder alle bestaande indicators
-        document.querySelectorAll('.drop-indicator').forEach(indicator => indicator.remove());
-        
-        let insertIndex = blocks.length;
-        
-        for (let i = 0; i < blocks.length; i++) {
-            const block = blocks[i];
-            const blockRect = block.getBoundingClientRect();
-            const blockTop = blockRect.top - canvasRect.top;
-            const blockMiddle = blockTop + (blockRect.height / 2);
-            
-            if (y < blockMiddle) {
-                insertIndex = i;
-                // Voeg drop indicator toe boven dit blok
-                this.showDropIndicator(block, 'before');
-                break;
-            } else if (i === blocks.length - 1) {
-                insertIndex = blocks.length;
-                // Voeg drop indicator toe onder laatste blok
-                this.showDropIndicator(block, 'after');
-            }
-        }
-        
-        e.dataTransfer.dropEffect = 'move';
-    }
-
-    showDropIndicator(block, position) {
-        const indicator = document.createElement('div');
-        indicator.className = 'drop-indicator';
-        indicator.style.height = '4px';
-        indicator.style.background = '#3498db';
-        indicator.style.margin = position === 'before' ? '0 0 10px 0' : '10px 0 0 0';
-        indicator.style.borderRadius = '2px';
-        
-        if (position === 'before') {
-            block.parentNode.insertBefore(indicator, block);
-        } else {
-            block.parentNode.insertBefore(indicator, block.nextSibling);
-        }
-    }
-
-    handleDragLeave() {
-        const emailCanvas = document.getElementById('emailCanvas');
-        emailCanvas.classList.remove('drag-over');
-        document.querySelectorAll('.drop-indicator').forEach(indicator => indicator.remove());
-    }
-
-    handleDrop(e) {
-        const emailCanvas = document.getElementById('emailCanvas');
-        emailCanvas.classList.remove('drag-over');
-        document.querySelectorAll('.drop-indicator').forEach(indicator => indicator.remove());
-        
-        const blockId = e.dataTransfer.getData('text/plain');
-        
-        // Bepaal drop positie
-        const blocks = emailCanvas.querySelectorAll('.email-block');
-        const canvasRect = emailCanvas.getBoundingClientRect();
-        const y = e.clientY - canvasRect.top;
-        
-        let dropIndex = blocks.length;
-        
-        for (let i = 0; i < blocks.length; i++) {
-            const block = blocks[i];
-            const blockRect = block.getBoundingClientRect();
-            const blockTop = blockRect.top - canvasRect.top;
-            const blockMiddle = blockTop + (blockRect.height / 2);
-            
-            if (y < blockMiddle) {
-                dropIndex = i;
-                break;
-            }
-        }
-        
-        if (blockId.startsWith('move-')) {
-            // Verplaats bestaand blok
-            const fromIndex = parseInt(blockId.split('-')[1]);
-            if (fromIndex !== dropIndex) {
-                this.moveBlock(fromIndex, dropIndex);
-            }
-        } else {
-            // Voeg nieuw blok toe
-            this.addBlockToEmail(parseInt(blockId), dropIndex);
-        }
-    }
-
-    moveBlock(fromIndex, toIndex) {
-        const block = this.currentEmail.splice(fromIndex, 1)[0];
-        this.currentEmail.splice(toIndex, 0, block);
-        this.renderEmail();
-    }
-
-    addBlockToEmail(blockId, index = -1) {
-        const block = this.blocks.find(b => b.id === blockId);
-        if (block) {
-            if (index === -1) {
-                this.currentEmail.push({...block});
-            } else {
-                this.currentEmail.splice(index, 0, {...block});
-            }
-            this.renderEmail();
-        }
     }
 
     renderBlocks() {
@@ -295,18 +163,7 @@ class EmailBuilder {
         this.currentEmail.forEach((block, index) => {
             const blockElement = document.createElement('div');
             blockElement.className = 'email-block';
-            blockElement.draggable = true;
             blockElement.textContent = block.text;
-            blockElement.dataset.index = index;
-
-            blockElement.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', `move-${index}`);
-                blockElement.classList.add('dragging');
-            });
-
-            blockElement.addEventListener('dragend', () => {
-                blockElement.classList.remove('dragging');
-            });
 
             const editBtn = document.createElement('button');
             editBtn.textContent = '✏️ Bewerk';
@@ -359,6 +216,14 @@ class EmailBuilder {
             this.blocks = this.blocks.filter(block => block.id !== blockId);
             this.saveData();
             this.renderBlocks();
+        }
+    }
+
+    addBlockToEmail(blockId) {
+        const block = this.blocks.find(b => b.id === blockId);
+        if (block) {
+            this.currentEmail.push({...block});
+            this.renderEmail();
         }
     }
 
